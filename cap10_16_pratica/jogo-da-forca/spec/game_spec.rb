@@ -2,17 +2,8 @@ require 'spec_helper'
 require 'game'
 
 describe Game do
-  let(:ui) {double("ui").as_null_object}
-  subject(:game) {Game.new(ui)}
-
-  describe "#start" do
-    it "prints the initial message" do
-      initial_message = "Bem-vindo ao jogo da forca!"
-      expect(ui).to receive(:write).with(initial_message)
-
-      game.start
-    end
-  end
+  let(:word_raffler) {double("raffler").as_null_object}
+  subject(:game) {Game.new(word_raffler)}
 
   describe "#ended?" do
     it "returns false when the game just started" do
@@ -20,56 +11,29 @@ describe Game do
     end
   end
 
-  describe "#next_step" do
+  describe "#raffle" do
+    it "raffles a word with the given length" do
+      expect(word_raffler).to receive(:raffle).with(3)
 
-    it "finishes the game when the player asks to" do
-        player_input = "fim"
-        allow(ui).to receive(:read).and_return(player_input)
-
-        game.next_step
-
-        expect(game).to be_ended
-      end
+      game.raffle(3)
     end
 
-    context "when the game just started" do
-      it "asks the player for the length of the word to be raffled" do
-        question = "Qual o tamanho da palavra a ser sorteada?"
-        expect(ui).to receive(:write).with(question)
-        word_length = "3"
-        expect(ui).to receive(:read).and_return(word_length)
+    it "saves the raffled word" do
+      raffled_word = "mom"
+      allow(word_raffler).to receive(:raffle).and_return(raffled_word)
 
-        game.next_step
-      end
+      game.raffle(3)
 
-    context "when the player asks to raffle a word" do
-      it "raffles a word with the given length" do
-        word_length = "3"
-        allow(ui).to receive(:read).and_return(word_length)
-
-        game.next_step
-
-        expect(game.raffled_word).to have(word_length).letters
-      end
-
-      it "prints a '_' for each letter in the raffled word" do
-        word_length = "3"
-        allow(ui).to receive(:read).and_return(word_length)
-
-        expect(ui).to receive(:write).with("___")
-
-        game.next_step
-      end
-
-      it "tells if it's not possible to raffle with the given length" do
-        word_length ="20"
-        allow(ui).to receive(:read).and_return(word_length)
-
-        error_message = "Não temos uma palavra com o tamanho desejado, é necessario escolher outro tamanho."
-        expect(ui).to receive(:write).with(error_message)
-
-        game.next_step
-      end
+      expect(game.raffled_word).to eq(raffled_word)
     end
   end
+
+  describe "#finish" do
+    it "sets the game as ended" do
+      game.finish
+
+      expect(game).to be_ended
+    end
+  end
+
 end
