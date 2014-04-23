@@ -1,0 +1,20 @@
+1 - crie o gemfile com o Bundle e adicione as gems do cucumber e do rspec
+  -- gem install bundler
+  -- bundle init
+  -- adicione no Gemfile:
+        gem "cucumber"
+        gem "rspec"
+  -- bundle install
+
+2 - crie os seguintes diretorios:
+  -- features
+      -- step_definitions
+      -- support (com o arquivo env.rb dentro)
+
+
+3 - inicie o rspec no projeto com:
+  -- bundle exec rspec --init
+
+
+
+
