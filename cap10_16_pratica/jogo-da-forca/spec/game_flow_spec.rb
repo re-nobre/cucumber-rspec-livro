@@ -124,5 +124,20 @@ describe GameFlow do
         end
       end
     end
+
+    context "when the game is in the 'ended' state" do
+      before {allow(game).to receive(:state).and_return(:ended)}
+
+      it "prints a sucess message when the player win" do
+        expect(ui).to receive(:write).with("Você venceu!:)")
+        game_flow.next_step
+      end
+
+      it "prints a defeat message when the player lose" do
+        allow(game).to receive(:player_won?).and_return(false)
+        expect(ui).to receive(:write).with("Você perdeu.:(")
+        game_flow.next_step
+      end
+    end
   end
 end

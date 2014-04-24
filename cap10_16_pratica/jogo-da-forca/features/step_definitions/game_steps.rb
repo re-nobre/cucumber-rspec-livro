@@ -39,5 +39,10 @@ Então(/^o jogo mostra que errei a adivinhação da letra$/) do
   assert_partial_output("Você errou a letra.", all_stdout)
 end
 
+Quando(/^tento adivinhar que a palavra tem a letra "(.*?)" "(.*?)" vezes$/) do |letter, number_of_guesses|
+  number_of_guesses.to_i.times do
+    type(letter)
+  end
+end
 
 

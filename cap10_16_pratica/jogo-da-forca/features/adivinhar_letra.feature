@@ -46,7 +46,7 @@ Funcionalidade: Adivinhar letra
     """
     av_
     """
-  @wip
+
   Cenário: Jogador erra tês vezes ao adivinhar letra
   Quanto mais o jogador for errando, mais partes do boneco da forca são perdidas.
     Dado que comecei um jogo

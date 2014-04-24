@@ -95,6 +95,15 @@ describe Game do
 
       expect(game.missed_parts).to eq(["cabeça"])
     end
+
+    it "makes a transition to the 'ended' when the player miss 6 times trying to guess a letter" do
+      game.state = :word_raffled
+      game.raffled_word = "hi"
+
+      expect do
+       6.times {game.guess_letter("z")}
+      end.to change {game.state}.from(:word_raffled).to(:ended)
+    end
   end
 
   describe "#guessed_letters" do
@@ -106,6 +115,16 @@ describe Game do
 
     it "return an empty array when therś no guessed letters" do
       expect(game.guessed_letters).to eq([])
+    end
+
+    it "makes a transition to the 'ended' state when all the letters are guessed with sucess" do
+      game.state = :word_raffled
+      game.raffled_word = "hi"
+
+      expect do
+        game.guess_letter("h")
+        game.guess_letter("i")
+      end.to change {game.state}.from(:word_raffled).to(:ended)
     end
   end
 
@@ -123,6 +142,38 @@ describe Game do
 
       expect(game.missed_parts).to eq(["cabeça", "corpo", "braço esquerdo"])
     end
+  end
+
+  describe "#player_won?" do
+    it "returns true when the player guessed all letters with success" do
+      game.state = :word_raffled
+      game.raffled_word = "hi"
+
+      game.guess_letter("h")
+      game.guess_letter("i")
+
+      expect(game.player_won?).to be_true
+    end
+
+    it "returns false when the player didn't guessed all letters" do
+      game.state = :word_raffled
+      game.raffled_word = "hi"
+
+      6.times {game.guess_letter("z")}
+
+      expect(game.player_won?).to be_false
+    end
+
+    it "returns false when the game is not in the 'ended' state" do
+      game.state = :initial
+      expect(game.player_won?).to be_false
+
+      game.state = :word_raffled
+      expect(game.player_won?).to be_false
+
+    end
+
+
   end
 
 end
