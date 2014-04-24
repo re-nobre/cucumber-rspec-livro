@@ -1,4 +1,4 @@
-#Esta classe é responsável pelo fluxo do jogo
+#Classe responsável pelo fluxo do jogo
 
 require_relative 'cli_ui'
 require_relative 'game'
@@ -19,32 +19,62 @@ class GameFlow
   end
 
   def next_step
-    @ui.write("Qual o tamanho da palavra a ser sorteada?")
-    player_input = @ui.read.strip
+    case @game.state
+    when :initial
+      ask_to_raffle_a_word
+    when :word_raffled
+      ask_to_guess_a_letter
+    end
+  end
 
-    if player_input == "fim"
-      @game.finish
-    else
-      if @game.raffle(player_input.to_i)
-        print_letters_feedback
+  private
+  def ask_to_raffle_a_word
+    ask_the_player("Qual o tamanho da palavra a ser sorteada?") do |length|
+      if @game.raffle(length.to_i)
+        @ui.write(guessed_letters)
       else
-        error_message = "Não temos uma palavra com o tamanho desejado, é necessario escolher outro tamanho"
+        error_message = "Não temos uma palavra com o tamanho desejado, é necessario escolher outro tamanho."
         @ui.write(error_message)
       end
     end
   end
 
-  private
-  def print_letters_feedback
-    letters_feedback = ""
-
-    @game.raffled_word.length.times do
-      letters_feedback << "_"
+  def ask_to_guess_a_letter
+    ask_the_player("Qual letra você acha que a palavra tem?") do |letter|
+      if @game.guess_letter(letter)
+        @ui.write("Você adivinhou uma letra com sucesso.")
+        @ui.write(guessed_letters)
+      else
+        @ui.write("Você errou a letra.")
+        missed_parts_message = "O boneco da forca perdeu as seguintes partes do corpo: "
+        missed_parts_message << @game.missed_parts.join(",")
+        @ui.write(missed_parts_message)
+      end
     end
-
-    letters_feedback.strip!
-
-    @ui.write(letters_feedback)
   end
 
+  def guessed_letters
+    letters = ""
+
+    @game.raffled_word.each_char do |letter|
+
+      if @game.guessed_letters.include?(letter)
+        letters << letter
+      else
+        letters << "_"
+      end
+    end
+    letters
+  end
+
+  def ask_the_player(question)
+    @ui.write(question)
+    player_input = @ui.read.strip
+
+    if player_input == "fim"
+      @game.finish
+    else
+      yield player_input.strip
+    end
+  end
 end

@@ -25,7 +25,6 @@ Funcionalidade: Começar jogo
     ____
     """
 
-  @wip
   Cenário: Sorteio da palavra sem sucesso
     Se o jogador pedir para o jogo sortear uma palavra com um tamanho que o jogo não tem disponivel, o jogador deve ser avisado disso e o jogo deve pedir pro jogador sortear outra palavra
 
@@ -34,7 +33,7 @@ Funcionalidade: Começar jogo
     E termino o jogo
     Então o jogo termina com a seguinte mensagem na tela:
     """
-    Não temos uma palavra com o tamanho desejado, é necessario escolher outro tamanho
+    Não temos uma palavra com o tamanho desejado, é necessario escolher outro tamanho.
     Qual o tamanho da palavra a ser sorteada?
     """
 
