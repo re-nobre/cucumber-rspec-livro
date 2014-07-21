@@ -1,3 +1,5 @@
+[FINALIZADO]
+
 Projeto realizado como estudo do livro: 
 - Cucumber e RSpec: Construa aplicações Ruby com testes e especificações
 
